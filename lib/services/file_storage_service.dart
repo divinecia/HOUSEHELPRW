@@ -1,30 +1,26 @@
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:househelp/config/supabase_config.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as path;
 
 class FileStorageService {
-  static final FirebaseStorage _storage = FirebaseStorage.instance;
+  static final _storage = SupabaseConfig.client.storage;
 
-  /// Upload a file to Firebase Storage and return the download URL
+  /// Upload a file to Supabase Storage and return the download URL
   static Future<String> uploadFile(XFile file, String folder) async {
     try {
       // Create a unique filename
       final String fileName =
-          '${DateTime.now().millisecondsSinceEpoch}_${path.basename(file.path)}';
+          '${DateTime.now().millisecondsSinceEpoch}_${file.name}';
       final String filePath = '$folder/$fileName';
 
-      // Create a reference to Firebase Storage
-      final Reference ref = _storage.ref().child(filePath);
+      // Read file bytes
+      final bytes = await File(file.path).readAsBytes();
 
-      // Upload the file
-      final UploadTask uploadTask = ref.putFile(File(file.path));
-
-      // Wait for upload to complete
-      final TaskSnapshot snapshot = await uploadTask;
+      // Upload to Supabase Storage
+      await _storage.from('files').uploadBinary(filePath, bytes);
 
       // Get download URL
-      final String downloadUrl = await snapshot.ref.getDownloadURL();
+      final String downloadUrl = _storage.from('files').getPublicUrl(filePath);
 
       return downloadUrl;
     } catch (e) {
@@ -41,28 +37,26 @@ class FileStorageService {
 
   /// Get file type from extension
   static String getFileType(String fileName) {
-    final String extension = path.extension(fileName).toLowerCase();
+    final String extension = fileName.toLowerCase().split('.').last;
 
-    if (['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
-        .contains(extension)) {
+    if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].contains(extension)) {
       return 'image';
-    } else if (['.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm']
+    } else if (['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm']
         .contains(extension)) {
       return 'video';
-    } else if (['.pdf'].contains(extension)) {
+    } else if (['pdf'].contains(extension)) {
       return 'pdf';
-    } else if (['.doc', '.docx'].contains(extension)) {
+    } else if (['doc', 'docx'].contains(extension)) {
       return 'document';
     } else {
       return 'file';
     }
   }
 
-  /// Delete a file from Firebase Storage
-  static Future<void> deleteFile(String downloadUrl) async {
+  /// Delete a file from Supabase Storage
+  static Future<void> deleteFile(String filePath) async {
     try {
-      final Reference ref = _storage.refFromURL(downloadUrl);
-      await ref.delete();
+      await _storage.from('files').remove([filePath]);
     } catch (e) {
       throw Exception('Failed to delete file: $e');
     }

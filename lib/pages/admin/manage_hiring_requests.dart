@@ -22,7 +22,7 @@ class AdminManageHiringRequests extends StatefulWidget {
 class _AdminManageHiringRequestsState extends State<AdminManageHiringRequests> {
   final HireRequestService _hireRequestService = HireRequestService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  int _selectedIndex = 2; // Jobs is selected
+  final int _selectedIndex = 2; // Jobs is selected
   bool _isLoading = false;
   String _searchQuery = '';
   String _selectedStatus = 'All';

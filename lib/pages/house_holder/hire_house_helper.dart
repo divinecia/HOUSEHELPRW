@@ -4,7 +4,7 @@ import '../../models/house_helper_profile.dart';
 class HireHelperPage extends StatefulWidget {
   final HouseHelperProfile helper;
 
-  const HireHelperPage({Key? key, required this.helper}) : super(key: key);
+  const HireHelperPage({super.key, required this.helper});
 
   @override
   State<HireHelperPage> createState() => _HireHelperPageState();

@@ -30,19 +30,19 @@ class _AdminDashboardState extends State<AdminDashboard> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          UserAccountsDrawerHeader(
+          const UserAccountsDrawerHeader(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
+              color: Colors.blue, // Use a constant color or theme color
             ),
-            accountName: const Text(
+            accountName: Text(
               'Admin Panel',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            accountEmail: const Text(
+            accountEmail: Text(
               'Administrator',
               style: TextStyle(fontSize: 14),
             ),
-            currentAccountPicture: const CircleAvatar(
+            currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: Icon(Icons.admin_panel_settings, size: 48),
             ),
@@ -103,8 +103,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
           ),
 
           // ListTile(
-          //   leading: const Icon(Icons.payments),
-          //   title: const Text('Payments'),
+          //   leading: Icon(Icons.payments),
+          //   title: Text('Payments'),
           //   selected: _selectedIndex == 3,
           //   onTap: () {
           //     _onItemTapped(2);
@@ -117,8 +117,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
           //   },
           // ),
           // ListTile(
-          //   leading: const Icon(Icons.settings),
-          //   title: const Text('Chats'),
+          //   leading: Icon(Icons.settings),
+          //   title: Text('Chats'),
           //   selected: _selectedIndex == 4,
           //   onTap: () {
           //     _onItemTapped(2);
@@ -151,12 +151,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 listen: false,
               );
               await authService.signout();
-              if (mounted) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                );
-              }
+              if (!mounted) return;
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
             },
           ),
         ],
@@ -191,9 +190,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
     final role = await authService.getCurrentUserRole();
 
     if (role != UserRole.admin) {
-      if (mounted) {
-        Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
-      }
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
       return;
     }
 
@@ -494,15 +492,15 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       horizontal: isMobile ? 12 : 16,
                     ),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.refresh,
                         size: 20,
                         color: Colors.blue,
                       ), // Added color to icon
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Text(
                         'Refresh Data',
                         style: TextStyle(
@@ -695,7 +693,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   child: _userGrowthData.isNotEmpty
                       ? LineChart(
                           LineChartData(
-                            gridData: FlGridData(show: true),
+                            gridData: const FlGridData(show: true),
                             titlesData: FlTitlesData(
                               leftTitles: AxisTitles(
                                 sideTitles: SideTitles(
@@ -724,10 +722,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                   },
                                 ),
                               ),
-                              topTitles: AxisTitles(
+                              topTitles: const AxisTitles(
                                 sideTitles: SideTitles(showTitles: false),
                               ),
-                              rightTitles: AxisTitles(
+                              rightTitles: const AxisTitles(
                                 sideTitles: SideTitles(showTitles: false),
                               ),
                             ),
@@ -746,7 +744,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                 color: Colors.blue,
                                 barWidth: 3,
                                 belowBarData: BarAreaData(show: false),
-                                dotData: FlDotData(show: true),
+                                dotData: const FlDotData(show: true),
                               ),
                             ],
                           ),
@@ -796,7 +794,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
               child: _revenueData.isNotEmpty
                   ? LineChart(
                       LineChartData(
-                        gridData: FlGridData(show: true),
+                        gridData: const FlGridData(show: true),
                         titlesData: FlTitlesData(
                           leftTitles: AxisTitles(
                             sideTitles: SideTitles(
@@ -824,10 +822,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                               },
                             ),
                           ),
-                          topTitles: AxisTitles(
+                          topTitles: const AxisTitles(
                             sideTitles: SideTitles(showTitles: false),
                           ),
-                          rightTitles: AxisTitles(
+                          rightTitles: const AxisTitles(
                             sideTitles: SideTitles(showTitles: false),
                           ),
                         ),
@@ -846,7 +844,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                               show: true,
                               color: const Color.fromRGBO(0, 150, 136, 0.3),
                             ),
-                            dotData: FlDotData(show: true),
+                            dotData: const FlDotData(show: true),
                           ),
                         ],
                       ),
@@ -1074,7 +1072,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
               child: _jobTrendsData.isNotEmpty
                   ? BarChart(
                       BarChartData(
-                        gridData: FlGridData(show: true),
+                        gridData: const FlGridData(show: true),
                         titlesData: FlTitlesData(
                           leftTitles: AxisTitles(
                             sideTitles: SideTitles(
@@ -1102,10 +1100,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                               },
                             ),
                           ),
-                          topTitles: AxisTitles(
+                          topTitles: const AxisTitles(
                             sideTitles: SideTitles(showTitles: false),
                           ),
-                          rightTitles: AxisTitles(
+                          rightTitles: const AxisTitles(
                             sideTitles: SideTitles(showTitles: false),
                           ),
                         ),

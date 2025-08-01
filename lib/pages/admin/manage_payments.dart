@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AdminManagePayments extends StatefulWidget {
-  const AdminManagePayments({Key? key}) : super(key: key);
+  const AdminManagePayments({super.key});
 
   @override
   State<AdminManagePayments> createState() => _AdminManagePaymentsState();

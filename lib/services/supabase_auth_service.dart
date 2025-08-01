@@ -7,6 +7,9 @@ class SupabaseAuthService {
   // Get current user
   static User? get currentUser => _client.auth.currentUser;
 
+  // Get current user (alternative method for compatibility)
+  static User? getCurrentUser() => _client.auth.currentUser;
+
   // Sign up with email and password
   static Future<AuthResponse> signUp({
     required String email,

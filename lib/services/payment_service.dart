@@ -248,4 +248,166 @@ class PaymentService {
       return {};
     }
   }
+
+  // Get revenue analytics for admin dashboard
+  static Future<Map<String, dynamic>> getRevenueAnalytics() async {
+    try {
+      final allPayments = await getAllPayments();
+      final now = DateTime.now();
+      final currentMonth = DateTime(now.year, now.month, 1);
+      final lastMonth = DateTime(now.year, now.month - 1, 1);
+
+      // Current month revenue
+      final currentMonthRevenue = allPayments
+          .where((p) => p.isCompleted && p.createdAt.isAfter(currentMonth))
+          .fold(0.0, (sum, payment) => sum + payment.amount);
+
+      // Last month revenue
+      final lastMonthRevenue = allPayments
+          .where((p) =>
+              p.isCompleted &&
+              p.createdAt.isAfter(lastMonth) &&
+              p.createdAt.isBefore(currentMonth))
+          .fold(0.0, (sum, payment) => sum + payment.amount);
+
+      // Total revenue
+      final totalRevenue = allPayments
+          .where((p) => p.isCompleted)
+          .fold(0.0, (sum, payment) => sum + payment.amount);
+
+      // Service vs Training revenue (if payment_type exists)
+      double serviceRevenue = 0.0;
+      double trainingRevenue = 0.0;
+
+      for (final payment in allPayments.where((p) => p.isCompleted)) {
+        // Assuming we add payment_type to the Payment model later
+        // For now, we'll treat all as service revenue
+        serviceRevenue += payment.amount;
+      }
+
+      return {
+        'currentMonthRevenue': currentMonthRevenue,
+        'lastMonthRevenue': lastMonthRevenue,
+        'totalRevenue': totalRevenue,
+        'serviceRevenue': serviceRevenue,
+        'trainingRevenue': trainingRevenue,
+        'revenueGrowth': lastMonthRevenue > 0
+            ? ((currentMonthRevenue - lastMonthRevenue) / lastMonthRevenue) *
+                100
+            : 0.0,
+      };
+    } catch (e) {
+      print('Error getting revenue analytics: $e');
+      return {
+        'currentMonthRevenue': 0.0,
+        'lastMonthRevenue': 0.0,
+        'totalRevenue': 0.0,
+        'serviceRevenue': 0.0,
+        'trainingRevenue': 0.0,
+        'revenueGrowth': 0.0,
+      };
+    }
+  }
+
+  // Update payment status and transaction details
+  static Future<bool> updatePayment({
+    required String paymentId,
+    String? status,
+    String? transactionId,
+  }) async {
+    try {
+      final updateData = <String, dynamic>{};
+
+      if (status != null) {
+        updateData['status'] = status;
+      }
+
+      if (transactionId != null) {
+        updateData['transaction_id'] = transactionId;
+      }
+
+      updateData['updated_at'] = DateTime.now().toIso8601String();
+
+      await SupabaseService.update(
+        table: 'payments',
+        id: paymentId,
+        data: updateData,
+      );
+
+      return true;
+    } catch (e) {
+      print('Error updating payment: $e');
+      return false;
+    }
+  }
+
+  // Initiate a payment for training enrollment
+  static Future<Payment?> initiateTrainingPayment({
+    required double amount,
+    required String phoneNumber,
+    required String trainingId,
+    required String userId,
+    String? description,
+  }) async {
+    try {
+      final paymentId = _uuid.v4();
+      final paymentDescription =
+          description ?? 'Payment for training enrollment';
+
+      // Create payment record in Supabase
+      final payment = Payment(
+        id: paymentId,
+        transactionId: '', // Will be updated after Paypack response
+        amount: amount,
+        currency: 'RWF',
+        phoneNumber: phoneNumber,
+        description: paymentDescription,
+        status: 'pending',
+        paymentMethod: 'mobile_money',
+        trainingId: trainingId,
+        houseHelperId: userId,
+        createdAt: DateTime.now(),
+      );
+
+      // Save to database
+      await SupabaseService.create(
+        table: _paymentsTable,
+        data: payment.toJson(),
+      );
+
+      // Initiate payment with Paypack
+      final paypackResponse = await PaypackService.initiatePayment(
+        amount: amount,
+        phoneNumber: phoneNumber,
+        description: paymentDescription,
+      );
+
+      if (paypackResponse != null && paypackResponse['status'] == 'success') {
+        final transactionId = paypackResponse['ref']?.toString() ??
+            paypackResponse['id']?.toString();
+
+        // Update payment with transaction ID
+        await updatePayment(
+          paymentId: paymentId,
+          status: 'processing',
+          transactionId: transactionId,
+        );
+
+        return payment.copyWith(
+          transactionId: transactionId,
+          status: 'processing',
+        );
+      } else {
+        // Mark payment as failed
+        await updatePayment(
+          paymentId: paymentId,
+          status: 'failed',
+        );
+        return null;
+      }
+    } catch (e) {
+      print('Error initiating training payment: $e');
+      return null;
+    }
+  }
 }

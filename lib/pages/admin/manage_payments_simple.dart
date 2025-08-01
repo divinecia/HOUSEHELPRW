@@ -17,9 +17,9 @@ class AdminManagePayments extends StatefulWidget {
 }
 
 class _AdminManagePaymentsState extends State<AdminManagePayments> {
-  int _selectedIndex = 3; // Payments is selected
+  final int _selectedIndex = 3; // Payments is selected
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool _isLoading = false;
+  final bool _isLoading = false;
   List<PaymentData> _payments = [];
   double _totalRevenue = 0;
 

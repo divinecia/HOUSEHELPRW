@@ -256,3 +256,282 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For support, please contact [your-email@example.com] or create an issue in the repository.
 # HOUSEHELPRW
+
+# HOUSEHELP - House Helper Management App
+
+A comprehensive Flutter application for managing house helper services in Rwanda, featuring role-based access control, training management, payment processing, and administrative oversight.
+
+## 🏗️ Architecture
+
+- **Frontend**: Flutter with Material Design 3
+- **Backend**: Supabase (PostgreSQL + Real-time + Edge Functions)
+- **State Management**: Provider
+- **Authentication**: Supabase Auth with RLS (Row Level Security)
+- **Payments**: Paypack API integration (MTN Mobile Money, Airtel Money)
+- **Charts**: FL Chart for analytics visualization
+
+## 👥 User Roles
+
+### 🧑‍💼 Admin Panel
+Comprehensive administrative control with role-based access:
+
+#### 🧩 Access Control
+- Supabase role check: only admin users can access full system controls
+- Flutter route guard + Supabase RLS for role-based navigation
+- Secure session management with automatic token refresh
+
+#### 🧾 Admin Functionalities
+
+##### 📚 1. Training Management (CRUD)
+- **Create, Update, Delete Training Sessions**: Full lifecycle management
+- **Scheduling**: Date, time, location, and instructor assignment
+- **Participant Management**: View workers who requested to join via Supabase relations
+- **Training Types**: 
+  - Mandatory training (required for all workers)
+  - Paid training (workers pay to attend)
+  - Free training (company-sponsored)
+- **Payment Integration**: Differentiate training payments from service payments using Supabase field flags
+- **Training History**: Complete participation history stored in Supabase
+- **Certificates**: Automatic certificate issuance for passing scores
+- **Analytics**: Training completion rates, popular courses, attendance tracking
+
+##### 👥 2. User Management
+- **Comprehensive User Overview**: View and filter all workers and households
+- **Advanced Filtering**: By name, district, status, registration date, service type
+- **Worker Profile Management**:
+  - Verified National ID status (manual verification, OCR/API ready for future)
+  - Rating and review system
+  - Services offered and specializations
+  - Complete training history and certifications
+- **Account Actions**: Delete or suspend users with behavior issues
+- **Data Export**: User lists and statistics
+- **Flutter Data Table**: Sortable, paginated user interface powered by Supabase
+
+##### 🧼 3. Worker Oversight & Behavior Management
+- **Behavior Report System**: Households can submit detailed worker behavior reports
+- **Report Categories**: Professional conduct, punctuality, quality of work, safety issues
+- **Severity Levels**: Low, Medium, High, Critical
+- **Automated Escalation**: 
+  - Use Supabase Edge Functions to send reports to Isange One Stop Center
+  - CC company admin with detailed report information
+  - Email templates with incident details and evidence
+- **Report Archive**: Complete history with timestamps and involved parties
+- **Investigation Tracking**: Status updates, admin notes, resolution outcomes
+- **Evidence Management**: Photo/video upload and storage via Supabase Storage
+
+##### 🛠️ 4. System Maintenance (FixMessages)
+- **Issue Reporting**: Households and workers can submit system issues
+- **Category Types**: Bug reports, feature requests, improvements, questions
+- **Priority Levels**: Low, Medium, High, Urgent
+- **Admin Dashboard**: Centralized "System Maintenance" panel
+- **Status Tracking**: Pending → In Progress → Resolved workflow
+- **Assignment System**: Assign issues to specific admin team members
+- **Resolution Documentation**: Detailed solutions and fix notes
+- **User Feedback**: Automatic notification to reporters when issues are resolved
+
+##### 📊 5. Analytics Dashboard
+Comprehensive metrics powered by Supabase aggregated queries:
+
+**User Analytics**:
+- Total registered users (households vs workers)
+- Registration trends and growth patterns
+- User activity and engagement metrics
+- Geographic distribution by district
+
+**Business Analytics**:
+- Active hiring requests and completion rates
+- Revenue and earnings via Paypack API integration
+- Most requested services and seasonal trends
+- Customer satisfaction scores (based on household reviews)
+- Worker performance ratings and improvement trends
+
+**Training Analytics**:
+- Worker attendance to training sessions
+- Completion rates and certification statistics
+- Popular training categories and demand forecasting
+- Training ROI and effectiveness metrics
+
+**Visual Reporting**:
+- Material Design charts and graphs (FL Chart)
+- Interactive dashboards with drill-down capabilities
+- Exportable reports (PDF/CSV)
+- Real-time data updates
+
+##### 💳 6. Payment Management
+- **Unified Payment Dashboard**: All transactions via Supabase + Paypack API sync
+- **Payment Categories**:
+  - **Service Payments**: Job request payments from households to workers
+  - **Training Payments**: Worker purchases for paid training sessions
+  - **Platform Fees**: Service charges and commission tracking
+- **Payment Analytics**:
+  - Revenue breakdown by category and time period
+  - Payment method distribution (MTN Money, Airtel Money)
+  - Failed payment tracking and retry mechanisms
+  - Tax calculation and reporting (18% VAT)
+- **Financial Reports**:
+  - Export payment reports (CSV/PDF format)
+  - Filter by amount range, date, user role, payment provider
+  - Monthly/quarterly financial summaries
+  - Reconciliation tools for accounting
+
+##### 📬 7. Notification Management
+- **Multi-Channel Notifications**:
+  - Push notifications via Flutter FCM
+  - Email notifications via Supabase Edge Functions
+  - SMS notifications (future integration)
+- **Notification Types**:
+  - New training announcements
+  - Upcoming job notifications
+  - Payment confirmations and reminders
+  - System maintenance updates
+  - Behavior report alerts
+- **Targeted Messaging**:
+  - Send to specific user groups (workers, households, all)
+  - Role-based notification preferences
+  - Scheduling and automation
+- **Delivery Tracking**: Read receipts and engagement metrics
+
+##### ⚙️ 8. System Settings
+**Application Configuration**:
+- Default language settings (Kinyarwanda, English, French)
+- Tax rate configuration (currently 18% VAT)
+- Service fee percentage for platform commission
+- Payment limits (minimum/maximum transaction amounts)
+
+**Benefits & Welfare Management**:
+- **Ejo Heza Integration**: Enable/configure government savings program
+- **Insurance Options**: Worker health and accident insurance programs
+- **Welfare Programs**: Additional benefits and support systems
+
+**Notification Preferences**:
+- Global notification settings (email, push, SMS)
+- User preference management
+- Notification frequency controls
+
+**Payment Provider Configuration**:
+- MTN Mobile Money settings
+- Airtel Money integration
+- Payment gateway failover options
+- Transaction fee management
+
+### 🏠 House Holder Features
+- **Service Requests**: Post detailed job requirements with location, timing, and budget
+- **Worker Discovery**: Browse and filter available house helpers by services, ratings, and proximity
+- **Secure Payments**: Integrated mobile money payments (MTN, Airtel) via Paypack
+- **Real-time Chat**: Direct communication with hired workers
+- **Rating System**: Review and rate worker performance
+- **Behavior Reporting**: Submit detailed reports for problematic behavior
+- **Service History**: Track all past hiring requests and payments
+
+### 🧹 House Helper Features
+- **Profile Management**: Showcase skills, experience, and availability
+- **Job Applications**: Apply for posted house holder requests
+- **Training Enrollment**: Request to join available training sessions
+- **Payment Tracking**: View earnings and payment history
+- **Chat System**: Communicate with employers
+- **Training History**: Track completed courses and certifications
+- **Rating Dashboard**: Monitor performance feedback
+
+## 🔒 Security Features
+
+### Supabase Row Level Security (RLS)
+- **Role-based Data Access**: Users only see data relevant to their role
+- **Admin-only Queries**: Sensitive operations restricted to admin accounts
+- **Automatic Session Management**: Secure token handling with refresh
+
+### Data Protection
+- **Encrypted Storage**: All sensitive data encrypted at rest
+- **Secure API Calls**: HTTPS-only communication
+- **Input Validation**: Comprehensive form validation and sanitization
+- **File Upload Security**: Secure image/document handling via Supabase Storage
+
+## 🚀 Technical Implementation
+
+### Database Schema (Supabase)
+```sql
+-- Core Tables
+profiles (user management with roles)
+trainings (training session management)
+training_participations (enrollment tracking)
+hire_requests (job postings and applications)
+payments (transaction records)
+behavior_reports (worker oversight)
+fix_messages (system issue tracking)
+system_settings (application configuration)
+
+-- Relations and Indexes
+- Foreign key relationships between all entities
+- Optimized indexes for common queries
+- RLS policies for data security
+```
+
+### State Management
+- **Provider Pattern**: Centralized state management
+- **Service Layer**: Abstracted business logic
+- **Repository Pattern**: Clean data access layer
+
+### Real-time Features
+- **Live Chat**: Supabase real-time subscriptions
+- **Notification Updates**: Instant admin panel updates
+- **Payment Status**: Real-time payment confirmation
+
+## 📱 Mobile-First Design
+
+### Material Design 3
+- **Adaptive UI**: Responsive design for all screen sizes
+- **Theme Support**: Light/dark mode with system preference
+- **Accessibility**: Screen reader support and high contrast options
+- **Modern Components**: Latest Material Design guidelines
+
+### Performance Optimization
+- **Lazy Loading**: Efficient data pagination
+- **Image Caching**: Cached network images for better performance
+- **Background Sync**: Offline capability for core features
+
+## 🌍 Rwanda-Specific Features
+
+### Local Integration
+- **Kinyarwanda Language**: Full localization support
+- **District Management**: Rwanda's administrative divisions
+- **Mobile Money**: MTN and Airtel Money integration via Paypack
+- **Government Services**: Isange One Stop Center integration for reports
+
+### Compliance
+- **Tax Integration**: 18% VAT calculation and reporting
+- **Legal Framework**: Compliance with Rwanda's labor laws
+- **Data Residency**: Data stored within African data centers
+
+## 🔄 Future Enhancements
+
+### Planned Features
+- **AI-Powered Matching**: Smart worker-household pairing
+- **OCR Integration**: Automatic ID verification
+- **Advanced Analytics**: Machine learning insights
+- **IoT Integration**: Smart home device connectivity
+- **Blockchain Payments**: Cryptocurrency payment options
+- **Voice Commands**: Voice-activated job posting
+- **Geofencing**: Location-based automatic check-ins
+
+### Scalability
+- **Microservices Architecture**: Future backend modularization
+- **CDN Integration**: Global content delivery
+- **Load Balancing**: High availability infrastructure
+- **Multi-tenant Support**: Enterprise customer management
+
+## 📞 Support & Maintenance
+
+### Issue Resolution
+- **In-app Reporting**: FixMessage system for user issues
+- **Admin Dashboard**: Centralized issue tracking and resolution
+- **Knowledge Base**: Self-service help documentation
+- **24/7 Support**: Emergency contact system
+
+### Continuous Improvement
+- **User Feedback**: Regular feature request collection
+- **Performance Monitoring**: Application health tracking
+- **Security Audits**: Regular security assessments
+- **Version Control**: Systematic update deployment
+
+---
+
+**HOUSEHELP** - Connecting Rwanda's households with skilled, trained, and reliable house helpers through technology, training, and trust.

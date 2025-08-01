@@ -10,6 +10,7 @@ class Payment {
   final String? hireRequestId;
   final String? houseHelperId;
   final String? houseHolderId;
+  final String? trainingId;
   final DateTime createdAt;
   final DateTime? completedAt;
   final Map<String, dynamic>? metadata;
@@ -26,6 +27,7 @@ class Payment {
     this.hireRequestId,
     this.houseHelperId,
     this.houseHolderId,
+    this.trainingId,
     required this.createdAt,
     this.completedAt,
     this.metadata,
@@ -44,6 +46,7 @@ class Payment {
       hireRequestId: json['hire_request_id'],
       houseHelperId: json['house_helper_id'],
       houseHolderId: json['house_holder_id'],
+      trainingId: json['training_id'],
       createdAt: DateTime.parse(
           json['created_at'] ?? DateTime.now().toIso8601String()),
       completedAt: json['completed_at'] != null
@@ -66,6 +69,7 @@ class Payment {
       'hire_request_id': hireRequestId,
       'house_helper_id': houseHelperId,
       'house_holder_id': houseHolderId,
+      'training_id': trainingId,
       'created_at': createdAt.toIso8601String(),
       'completed_at': completedAt?.toIso8601String(),
       'metadata': metadata,
@@ -84,6 +88,7 @@ class Payment {
     String? hireRequestId,
     String? houseHelperId,
     String? houseHolderId,
+    String? trainingId,
     DateTime? createdAt,
     DateTime? completedAt,
     Map<String, dynamic>? metadata,
@@ -100,6 +105,7 @@ class Payment {
       hireRequestId: hireRequestId ?? this.hireRequestId,
       houseHelperId: houseHelperId ?? this.houseHelperId,
       houseHolderId: houseHolderId ?? this.houseHolderId,
+      trainingId: trainingId ?? this.trainingId,
       createdAt: createdAt ?? this.createdAt,
       completedAt: completedAt ?? this.completedAt,
       metadata: metadata ?? this.metadata,

@@ -495,12 +495,12 @@ class _AdminDashboardState extends State<AdminManageChats> {
                       horizontal: isMobile ? 12 : 16,
                     ),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.refresh, size: 20),
-                      const SizedBox(width: 8),
-                      const Text('Refresh Data'),
+                      Icon(Icons.refresh, size: 20),
+                      SizedBox(width: 8),
+                      Text('Refresh Data'),
                     ],
                   ),
                 ),
@@ -517,12 +517,12 @@ class _AdminDashboardState extends State<AdminManageChats> {
                       horizontal: isMobile ? 12 : 16,
                     ),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.analytics, size: 20),
-                      const SizedBox(width: 8),
-                      const Text('View Full Analytics'),
+                      Icon(Icons.analytics, size: 20),
+                      SizedBox(width: 8),
+                      Text('View Full Analytics'),
                     ],
                   ),
                 ),
@@ -683,7 +683,7 @@ class _AdminDashboardState extends State<AdminManageChats> {
                   child: _userGrowthData.isNotEmpty
                       ? LineChart(
                           LineChartData(
-                            gridData: FlGridData(show: true),
+                            gridData: const FlGridData(show: true),
                             titlesData: FlTitlesData(
                               leftTitles: AxisTitles(
                                 sideTitles: SideTitles(
@@ -712,10 +712,10 @@ class _AdminDashboardState extends State<AdminManageChats> {
                                   },
                                 ),
                               ),
-                              topTitles: AxisTitles(
+                              topTitles: const AxisTitles(
                                 sideTitles: SideTitles(showTitles: false),
                               ),
-                              rightTitles: AxisTitles(
+                              rightTitles: const AxisTitles(
                                 sideTitles: SideTitles(showTitles: false),
                               ),
                             ),
@@ -734,7 +734,7 @@ class _AdminDashboardState extends State<AdminManageChats> {
                                 color: Colors.blue,
                                 barWidth: 3,
                                 belowBarData: BarAreaData(show: false),
-                                dotData: FlDotData(show: true),
+                                dotData: const FlDotData(show: true),
                               ),
                             ],
                           ),
@@ -784,7 +784,7 @@ class _AdminDashboardState extends State<AdminManageChats> {
               child: _revenueData.isNotEmpty
                   ? LineChart(
                       LineChartData(
-                        gridData: FlGridData(show: true),
+                        gridData: const FlGridData(show: true),
                         titlesData: FlTitlesData(
                           leftTitles: AxisTitles(
                             sideTitles: SideTitles(
@@ -812,10 +812,10 @@ class _AdminDashboardState extends State<AdminManageChats> {
                               },
                             ),
                           ),
-                          topTitles: AxisTitles(
+                          topTitles: const AxisTitles(
                             sideTitles: SideTitles(showTitles: false),
                           ),
-                          rightTitles: AxisTitles(
+                          rightTitles: const AxisTitles(
                             sideTitles: SideTitles(showTitles: false),
                           ),
                         ),
@@ -834,7 +834,7 @@ class _AdminDashboardState extends State<AdminManageChats> {
                               show: true,
                               color: const Color.fromRGBO(0, 150, 136, 0.3),
                             ),
-                            dotData: FlDotData(show: true),
+                            dotData: const FlDotData(show: true),
                           ),
                         ],
                       ),
@@ -1062,7 +1062,7 @@ class _AdminDashboardState extends State<AdminManageChats> {
               child: _jobTrendsData.isNotEmpty
                   ? BarChart(
                       BarChartData(
-                        gridData: FlGridData(show: true),
+                        gridData: const FlGridData(show: true),
                         titlesData: FlTitlesData(
                           leftTitles: AxisTitles(
                             sideTitles: SideTitles(
@@ -1090,10 +1090,10 @@ class _AdminDashboardState extends State<AdminManageChats> {
                               },
                             ),
                           ),
-                          topTitles: AxisTitles(
+                          topTitles: const AxisTitles(
                             sideTitles: SideTitles(showTitles: false),
                           ),
-                          rightTitles: AxisTitles(
+                          rightTitles: const AxisTitles(
                             sideTitles: SideTitles(showTitles: false),
                           ),
                         ),

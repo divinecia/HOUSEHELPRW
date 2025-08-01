@@ -10,11 +10,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  
+  # Core dependencies
   material: ^1.0.0+2
   provider: ^6.0.5
+  
+  # Supabase & Backend
   supabase_flutter: ^2.3.4
   supabase: ^2.1.0
-  intl: ^0.18.1
+  
+  # UI & Utilities
+  intl: ^0.20.2
+  cloud_firestore: ^4.7.1
   fl_chart: ^0.64.0
   image_picker: ^1.0.4
   url_launcher: ^6.2.2
@@ -23,6 +30,21 @@ dependencies:
   shared_preferences: ^2.2.2
   cached_network_image: ^3.3.0
   uuid: ^4.2.1
+  table_calendar: ^3.0.9
+  file_picker: ^6.1.1
+  
+  # New dependencies for shared functionalities
+  firebase_core: ^2.24.2
+  firebase_messaging: ^14.7.9
+  flutter_local_notifications: ^16.3.0
+  csv: ^5.0.2
+  path_provider: ^2.1.2
+  share_plus: ^7.2.1
+  easy_localization: ^3.0.3
+  connectivity_plus: ^5.0.2
+  device_info_plus: ^9.1.1
+  package_info_plus: ^4.2.0
+  flutter_timezone: ^1.0.8
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +53,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  
+  # Assets for localization
+  assets:
+    - assets/translations/
+    - assets/images/
+    - assets/icons/

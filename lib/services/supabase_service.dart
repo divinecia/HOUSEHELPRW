@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:househelp/config/supabase_config.dart';
 
@@ -39,17 +40,18 @@ class SupabaseService {
         });
       }
 
-      // Apply ordering
+      // Apply ordering and limit (these methods return PostgrestTransformBuilder)
+      PostgrestTransformBuilder transformBuilder = query;
       if (orderBy != null) {
-        query = query.order(orderBy, ascending: ascending);
+        transformBuilder =
+            transformBuilder.order(orderBy, ascending: ascending);
       }
 
-      // Apply limit
       if (limit != null) {
-        query = query.limit(limit);
+        transformBuilder = transformBuilder.limit(limit);
       }
 
-      final response = await query;
+      final response = await transformBuilder;
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
       print('Error reading from $table: $e');
@@ -116,11 +118,12 @@ class SupabaseService {
           .select(select ?? '*')
           .textSearch(column, searchTerm);
 
+      PostgrestTransformBuilder transformBuilder = query;
       if (limit != null) {
-        query = query.limit(limit);
+        transformBuilder = transformBuilder.limit(limit);
       }
 
-      final response = await query;
+      final response = await transformBuilder;
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
       print('Error searching in $table: $e');
@@ -172,9 +175,12 @@ class SupabaseService {
     String? mimeType,
   }) async {
     try {
+      // Convert List<int> to Uint8List
+      final uint8List = Uint8List.fromList(fileBytes);
+
       await _client.storage.from(bucket).uploadBinary(
             path,
-            fileBytes,
+            uint8List,
             fileOptions: FileOptions(
               contentType: mimeType,
               upsert: true,
